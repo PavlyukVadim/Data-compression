@@ -12,10 +12,13 @@ class Archiver
 
     public:
         Archiver();
+        Archiver(vector<string> const& filesName);
         virtual ~Archiver();
 
-    void getInfo();
+    void getFilesMetaData();
     void Compression();
     void Decompression();
+
+    void getFilesName();
 };
 
