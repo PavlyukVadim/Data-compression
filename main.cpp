@@ -9,12 +9,13 @@ int main()
 {
     vector<string> files(3);
 
-    files[0] = "aaa";
-    files[1] = "bbb";
-    files[2] = "ccc";
+    files[0] = "aaa.txt";
+    files[1] = "bbb.txt";
+    files[2] = "ccc.txt";
 
     Archiver *ar = new Archiver(files);
-    ar->getFilesName();
+    //ar->getFilesName();
+    cout << ar->getFilesMetaData();
 
     return 0;
 }

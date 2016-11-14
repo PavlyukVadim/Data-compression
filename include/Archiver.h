@@ -15,7 +15,7 @@ class Archiver
         Archiver(vector<string> const& filesName);
         virtual ~Archiver();
 
-    void getFilesMetaData();
+    string getFilesMetaData();
     void Compression();
     void Decompression();
 

@@ -1,9 +1,9 @@
 # depslib dependency file v1.0
-1479156675 source:/home/amadev/Рабочий стол/course work/Data-compression/main.cpp
+1479157260 source:/home/amadev/Рабочий стол/course work/Data-compression/main.cpp
 	<iostream>
 	"Archiver.h"
 
-1479156433 source:/home/amadev/Рабочий стол/course work/Data-compression/src/Archiver.cpp
+1479157273 source:/home/amadev/Рабочий стол/course work/Data-compression/src/Archiver.cpp
 	"Archiver.h"
 	<stdio.h>
 
