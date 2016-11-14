@@ -18,7 +18,7 @@ class Archiver
 
     string getFilesMetaData();
     void Compression();
-    void Decompression();
+    void Decompression(string);
 
     void getFilesName();
     string validateMeta(string);

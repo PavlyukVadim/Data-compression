@@ -1,7 +1,7 @@
 #include "Archiver.h"
 
 #include <stdio.h>
-
+#include <string.h>
 
 
 Archiver::Archiver() {
@@ -20,7 +20,7 @@ void Archiver::Compression() {
     metaData = validateMeta(metaData);
 
     string nameArcFile = "arc";
-    char byte [1];
+    char byte[1];
     FILE* cf = fopen( (nameArcFile).c_str(), "wb"); // create new Arc File
     fputs(metaData.c_str(), cf); // writte meta in Arc
 
@@ -40,6 +40,8 @@ void Archiver::Compression() {
     }
     fclose(cf);
 }
+
+
 
 
 string Archiver::getFilesMetaData() {
@@ -62,6 +64,48 @@ string Archiver::getFilesMetaData() {
         fclose(f);
     }
     return filesMetaData;
+}
+
+
+
+
+void Archiver::Decompression(string nameArcFile) {
+    FILE *arch = fopen(nameArcFile.c_str(),"rb"); // open Arch File
+    char strSizeMeta[MAX_META];
+    fread(strSizeMeta, 1, MAX_META, arch);
+    int sizeMeta = atoi(strSizeMeta);
+
+    char *metaData = new char[sizeMeta];
+    fread(metaData, 1, sizeMeta + 1, arch);
+
+    vector<string> tokens; // "file_name file_size"
+    char *tok = strtok(metaData, "|");
+    int toks = 0;
+
+    while(tok) {
+        if( !strlen(tok) ) break;
+        tokens.push_back(tok);
+        tok = strtok(NULL, "|");
+        toks++;
+    }
+
+    char byte[1];
+
+    for (int i = 0; i < tokens.size(); i++) {
+        string fileName = tokens[i].substr(tokens[i].find(" ") + 1, tokens[i].length());
+        int sizeFile = atoi( tokens[i].substr(0, tokens[i].find(" ")).c_str() );
+
+        cout << fileName << endl;
+        FILE* f = fopen(fileName.c_str(), "wb");
+
+        while(sizeFile--) {
+            if( fread(byte, 1, 1, arch) ) {
+                fwrite(byte, 1, 1, f);
+            }
+        }
+
+        fclose(f);
+    }
 }
 
 
