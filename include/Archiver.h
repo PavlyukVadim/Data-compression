@@ -8,6 +8,7 @@ using namespace std;
 
 class Archiver
 {
+    const int MAX_META = 3; // order
     vector<string> files;
 
     public:
@@ -20,5 +21,6 @@ class Archiver
     void Decompression();
 
     void getFilesName();
+    string validateMeta(string);
 };
 

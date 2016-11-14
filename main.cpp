@@ -15,7 +15,8 @@ int main()
 
     Archiver *ar = new Archiver(files);
     //ar->getFilesName();
-    cout << ar->getFilesMetaData();
+    //cout << ar->getFilesMetaData();
+    ar->Compression();
 
     return 0;
 }
