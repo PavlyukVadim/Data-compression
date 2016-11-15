@@ -13,11 +13,11 @@ int main()
     files[1] = "bbb.txt";
     files[2] = "bird.avi";
 
-    Archiver *ar = new Archiver(files);
+    //Archiver *ar = new Archiver(files);
     //ar->getFilesName();
     //cout << ar->getFilesMetaData();
     //ar->Compression();
-    ar->Decompression("arc");
+    //ar->Decompression("arc");
 
     return 0;
 }
