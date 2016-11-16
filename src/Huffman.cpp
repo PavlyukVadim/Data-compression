@@ -1,8 +1,5 @@
-#include <iostream>
-#include <queue>
-
-
 #include "Huffman.h"
+
 
 using namespace std;
 
@@ -35,3 +32,25 @@ BasicNode* Huffman::BuildTree(int frequencies[]) {
     }
     return trees.top();
 }
+
+
+void Huffman::GenerateCodes(const BasicNode* node, const BinarySymbolCode& bsc, SymbolCodeMap& scm){
+    if (const LeafNode* lf = dynamic_cast<const LeafNode*>(node)) { // перевірка чи вузол є екземпляром LeafNode
+        scm[lf->c] = bsc;
+    }
+    else if (const ParentNode* pn = dynamic_cast<const ParentNode*>(node)) {
+        BinarySymbolCode leftPrefix = bsc;
+        leftPrefix.push_back(false);
+        GenerateCodes(pn->left, leftPrefix, scm);
+
+        BinarySymbolCode rightPrefix = bsc;
+        rightPrefix.push_back(true);
+        GenerateCodes(pn->right, rightPrefix, scm);
+    }
+
+
+}
+
+
+
+

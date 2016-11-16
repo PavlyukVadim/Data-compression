@@ -35,8 +35,10 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="include/Archiver.h" />
+		<Unit filename="include/Huffman.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/Archiver.cpp" />
+		<Unit filename="src/Huffman.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

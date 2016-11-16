@@ -1,6 +1,14 @@
+#include <iostream>
+#include <queue>
+#include <map>
+
+using namespace std;
 
 
-const int UniqueSymbols = 256;
+typedef vector<bool> BinarySymbolCode;
+typedef map<char, BinarySymbolCode> SymbolCodeMap;
+
+const int UniqueSymbols = 256; // for char
 
 class BasicNode;
 
@@ -12,7 +20,7 @@ class Huffman
         virtual ~Huffman();
 
         BasicNode* BuildTree(int frequencies[]);
-
+        void GenerateCodes(const BasicNode*, const BinarySymbolCode&, SymbolCodeMap&); // обхід дерева + запис в map
 };
 
 class BasicNode {
