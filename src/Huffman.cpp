@@ -47,10 +47,4 @@ void Huffman::GenerateCodes(const BasicNode* node, const BinarySymbolCode& bsc, 
         rightPrefix.push_back(true);
         GenerateCodes(pn->right, rightPrefix, scm);
     }
-
-
 }
-
-
-
-

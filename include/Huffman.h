@@ -1,6 +1,9 @@
 #include <iostream>
 #include <queue>
 #include <map>
+#include <iterator>     // ostream_iterator
+#include <algorithm>    // copy
+
 
 using namespace std;
 
@@ -55,16 +58,12 @@ class LeafNode : public BasicNode {
 class NodeComp {
     bool rev;
 public:
-    //конструктор по умолчанию
     NodeComp(const bool& revpar = false) { rev = revpar;}
     bool operator()(const BasicNode* l, const BasicNode* r) {
         if (rev) {
-            return l->freq > r->freq;
+            return l->freq < r->freq;
         }
         else
-            return l->freq < r->freq;
+            return l->freq > r->freq;
     }
 };
-
-
-
