@@ -33,6 +33,7 @@ void Archiver::Compression() {
         while(!feof(f)) {
             if( fread(byte, 1, 1, f) ) {
                 fwrite(byte, 1, 1, cf);
+                cout << byte[0];
             }
         }
         cout<<files[i]<<" Добавлен в архив."<<endl;

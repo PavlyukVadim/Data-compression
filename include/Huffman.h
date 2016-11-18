@@ -24,6 +24,8 @@ class Huffman
 
         BasicNode* BuildTree(int frequencies[]);
         void GenerateCodes(const BasicNode*, const BinarySymbolCode&, SymbolCodeMap&); // обхід дерева + запис в map
+        string GetHuffmanTable(SymbolCodeMap&);
+        void Compression(string);
 };
 
 class BasicNode {

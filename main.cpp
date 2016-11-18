@@ -5,7 +5,6 @@
 
 using namespace std;
 
-const char* TestString = "test string ssss aaaaaa";
 
 int main()
 {
@@ -13,33 +12,18 @@ int main()
 
     files[0] = "aaa.txt";
     files[1] = "bbb.txt";
-    files[2] = "bird.avi";
+    files[2] = "logo.png";
 
-    //Archiver *ar = new Archiver(files);
-    //ar->getFilesName();
-    //cout << ar->getFilesMetaData();
-    //ar->Compression();
+
+    Archiver *ar = new Archiver(files);
+    ar->getFilesName();
+    cout << ar->getFilesMetaData();
+    ar->Compression();
     //ar->Decompression("arc");
 
-    Huffman* hf = new Huffman();
-
-    int frequencies[UniqueSymbols] = {0};
-    const char* ptr = TestString;
-    while (*ptr != '\0') {
-        ++frequencies[*ptr++];
-    }
-
-    BasicNode* root = hf->BuildTree(frequencies);
-
-    SymbolCodeMap codes;
-    hf->GenerateCodes(root, BinarySymbolCode(), codes);
-    delete root;
-
-    for (SymbolCodeMap::const_iterator it = codes.begin(); it != codes.end(); ++it) {
-        cout << it->first << " ";
-        copy(it->second.begin(), it->second.end(), ostream_iterator<bool>(cout));
-        cout << endl;
-    }
+    /*Huffman* hf = new Huffman();
+    string TestString = "test string ssss aaaaaa";
+    hf->Compression(TestString);*/
 
     return 0;
 }
