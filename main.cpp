@@ -22,8 +22,8 @@ int main()
     //ar->Decompression("arc");
     //setlocale(LC_ALL, "Russian");
     Huffman* hf = new Huffman();
-    string TestString = "idaoisufh lasjdvhkjs sidfbdfh dajsb zlkxvj lksjzfzlkjcxlk";
-    hf->Compression(TestString);
+    //string TestString = "idaoisufh lasjdvhkjs sidfbdfh dajsb zlkxvj lksjzfzlkjcxlk";
+    //hf->Compression("RCT.txt");
     hf->Decompression("huffmanCom.bin", "decompress.txt");
 
     return 0;

@@ -1,8 +1,6 @@
 #include "Huffman.h"
 
 
-using namespace std;
-
 Huffman::Huffman() {
 
 }
@@ -13,10 +11,29 @@ Huffman::~Huffman() {
 
 
 
-void Huffman::Compression(string data) {
+void Huffman::Compression(string bFileName) {
+
+    char byte[1];
+    FILE* bf = fopen( (bFileName).c_str(), "rb"); // open basic file
+
+    if(!bf) {
+        return;
+        //
+    }
+    fseek(bf, 0, SEEK_END);
+    int bFileSize = ftell(bf); // count byte from begin
+
+    fseek(bf, 0, SEEK_SET); // begin of file
+    char* data = new char[bFileSize];
+    int index = 0;
+    while(!feof(bf)) {
+        if( fread(byte, 1, 1, bf) ) {
+            data[index++] = *byte;
+        }
+    }
 
     int frequencies[UniqueSymbols] = {0};
-    const char* ptr = data.c_str();
+    const char* ptr = data;
     while (*ptr != '\0') {
         ++frequencies[*ptr++];
     }
@@ -34,9 +51,9 @@ void Huffman::Compression(string data) {
     FILE* f = fopen( (nameFile).c_str(), "wb"); // create new File
     fputs(huffmanTable.c_str(), f); // writte meta
 
-    char byte[1]; byte[0] = 0;
+    byte[0] = 0;
     int count_ = 0;
-    for (int i = 0; i < data.length(); i++) {
+    for (int i = 0; i < bFileSize; i++) {
         vector<bool> code = codes[data[i]];
         for (int n = 0; n < code.size(); n++) {
             byte[0] = byte[0] | code[n] << (7 - count_);
