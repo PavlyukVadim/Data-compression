@@ -95,7 +95,7 @@ void Huffman::Decompression(string cFileName, string dFileName) {
     }
 
     //read 1 bite from file and find out in map
-    char byte[1]; int count_ = 0;
+    char byte[1], buffer[1]; int count_ = 0;
     fread(byte, 1, 1, cf);
     BinarySymbolCode code;
 
@@ -111,6 +111,8 @@ void Huffman::Decompression(string cFileName, string dFileName) {
         for (SymbolCodeMap::const_iterator it = codes.begin(); it != codes.end(); ++it) {
             if (code == it->second) {
                 cout << it->first;
+                buffer[0] = it->first;
+                fwrite(buffer, 1, 1, df);
                 code.clear();
             }
         }
