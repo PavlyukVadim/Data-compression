@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1479635595 source:/home/amadev/Рабочий стол/course work/Data-compression/main.cpp
+1479639039 source:/home/amadev/Рабочий стол/course work/Data-compression/main.cpp
 	<iostream>
 	"Archiver.h"
 	"Huffman.h"
@@ -14,13 +14,14 @@
 	<string>
 	<vector>
 
-1479483883 source:/home/amadev/Рабочий стол/course work/Data-compression/src/Huffman.cpp
+1479641298 source:/home/amadev/Рабочий стол/course work/Data-compression/src/Huffman.cpp
 	"Huffman.h"
 
-1479483410 /home/amadev/Рабочий стол/course work/Data-compression/include/Huffman.h
+1479638987 /home/amadev/Рабочий стол/course work/Data-compression/include/Huffman.h
 	<iostream>
 	<queue>
 	<map>
 	<iterator>
 	<algorithm>
+	<string.h>
 

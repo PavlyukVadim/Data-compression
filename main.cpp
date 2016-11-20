@@ -24,6 +24,7 @@ int main()
     Huffman* hf = new Huffman();
     string TestString = "test string ssss aaaaaa";
     hf->Compression(TestString);
+    hf->Decompression("huffmanCom.bin", "decompress.txt");
 
 
     return 0;

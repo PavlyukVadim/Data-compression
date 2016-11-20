@@ -28,45 +28,79 @@ void Huffman::Compression(string data) {
 
 
     string huffmanTable = GetHuffmanTable(codes);
+    cout << huffmanTable << endl;
     string nameFile = "huffmanCom.bin";
 
     FILE* f = fopen( (nameFile).c_str(), "wb"); // create new File
     fputs(huffmanTable.c_str(), f); // writte meta
 
-    char buffer[1]; buffer[0] = 0;
+    char bite[1]; bite[0] = 0;
     int count_ = 0;
     for (int i = 0; i < data.length(); i++) {
         vector<bool> code = codes[data[i]];
         for (int n = 0; n < code.size(); n++) {
-            buffer[0] = buffer[0] | code[n] << (7 - count_);
+            bite[0] = bite[0] | code[n] << (7 - count_);
             count_++;
             if (count_ == 8) {
-                //fputs(buffer, f);
-                fwrite(buffer, 1, 1, f);
-                buffer[0] = 0;
+                fwrite(bite, 1, 1, f);
+                bite[0] = 0;
                 count_ = 0;
             }
         }
     }
-
-
-    /*for (int i = 0; i < files.size(); i++) {
-        FILE* f = fopen(files[i].c_str(), "rb");
-        if(!f){
-            break;
-        }
-        while(!feof(f)) {
-            if( fread(byte, 1, 1, f) ) {
-                fwrite(byte, 1, 1, cf);
-            }
-        }
-        cout<<files[i]<<" Добавлен в архив."<<endl;
-        fclose(f);
-    }*/
     fclose(f);
 
 }
 
+void Huffman::Decompression(string cFileName, string dFileName) {
+    FILE* cf = fopen( (cFileName).c_str(), "rb"); // open compressed file
+    FILE* df = fopen( (dFileName).c_str(), "wb"); // create decompress file
+
+    char strSizeMeta[MAX_META_H];
+    fread(strSizeMeta, 1, MAX_META_H, cf);
+    int sizeMeta = atoi(strSizeMeta);
+
+    char *metaData = new char[sizeMeta];
+    fread(metaData, 1, sizeMeta + 1, cf);
+    metaData[sizeMeta] = '\0'; // delete last '|'
+
+    vector<string> tokens; // "symbol symbol_code"
+    char *tok = strtok(metaData, "|");
+    int toks = 0;
+
+    while(tok) {
+        if( !strlen(tok) ) break;
+        tokens.push_back(tok);
+        tok = strtok(NULL, "|");
+        toks++;
+    }
+
+    //create SymbolCodeMap ([symbol] = [binary_code])
+    SymbolCodeMap codes;
+    for (int i = 0; i < tokens.size(); i++) {
+        //cout << tokens[i] << endl;
+        char symbol = tokens[i][0];
+        BinarySymbolCode code;
+        string strCode = tokens[i].substr(tokens[i].find_last_of(" "), tokens[i].length());
+
+        for (int n = 0; n < strCode.length(); n++) {
+            if (strCode[n] == '1') {
+                code.push_back(true);
+            }
+            else if (strCode[n] == '0') {
+                code.push_back(false);
+            }
+        }
+        codes[symbol] = code;
+    }
+
+
+
+    fclose(cf);
+    fclose(df);
+
+    //fputs(huffmanTable.c_str(), f); // writte meta
+}
 
 BasicNode* Huffman::BuildTree(int frequencies[]) {
     priority_queue<BasicNode*, vector<BasicNode*>, NodeComp> trees;
@@ -119,6 +153,12 @@ string Huffman::GetHuffmanTable(SymbolCodeMap& scm) {
         }
         huffmanTable += code + "|";
     }
+    // add string length meta data on begin
+    string strTableSize = to_string( huffmanTable.length() );
 
-    return huffmanTable;
+    while(strTableSize.length() < MAX_META_H) {
+        strTableSize = "0" + strTableSize;
+    }
+
+    return strTableSize + "|" + huffmanTable;
 }

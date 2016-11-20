@@ -3,6 +3,7 @@
 #include <map>
 #include <iterator>     // ostream_iterator
 #include <algorithm>    // copy
+#include <string.h>     // strtok
 
 
 using namespace std;
@@ -12,8 +13,8 @@ typedef vector<bool> BinarySymbolCode;
 typedef map<char, BinarySymbolCode> SymbolCodeMap;
 
 const int UniqueSymbols = 256; // for char
-
 class BasicNode;
+const int MAX_META_H = 5; // order
 
 
 class Huffman
@@ -26,6 +27,7 @@ class Huffman
         void GenerateCodes(const BasicNode*, const BinarySymbolCode&, SymbolCodeMap&); // обхід дерева + запис в map
         string GetHuffmanTable(SymbolCodeMap&);
         void Compression(string);
+        void Decompression(string, string);
 };
 
 class BasicNode {
