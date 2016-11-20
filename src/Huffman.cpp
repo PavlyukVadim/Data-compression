@@ -28,11 +28,26 @@ void Huffman::Compression(string data) {
 
 
     string huffmanTable = GetHuffmanTable(codes);
-    string nameFile = "huffmanCom";
+    string nameFile = "huffmanCom.bin";
 
-    char byte[1];
     FILE* f = fopen( (nameFile).c_str(), "wb"); // create new File
     fputs(huffmanTable.c_str(), f); // writte meta
+
+    char buffer[1]; buffer[0] = 0;
+    int count_ = 0;
+    for (int i = 0; i < data.length(); i++) {
+        vector<bool> code = codes[data[i]];
+        for (int n = 0; n < code.size(); n++) {
+            buffer[0] = buffer[0] | code[n] << (7 - count_);
+            count_++;
+            if (count_ == 8) {
+                //fputs(buffer, f);
+                fwrite(buffer, 1, 1, f);
+                buffer[0] = 0;
+                count_ = 0;
+            }
+        }
+    }
 
 
     /*for (int i = 0; i < files.size(); i++) {

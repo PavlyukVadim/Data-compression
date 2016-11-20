@@ -10,7 +10,7 @@ int main()
 {
     vector<string> files(3);
 
-    files[0] = "aaa.txt";
+    /*files[0] = "aaa.txt";
     files[1] = "bbb.txt";
     files[2] = "logo.png";
 
@@ -18,12 +18,13 @@ int main()
     Archiver *ar = new Archiver(files);
     ar->getFilesName();
     cout << ar->getFilesMetaData();
-    ar->Compression();
+    ar->Compression();*/
     //ar->Decompression("arc");
 
-    /*Huffman* hf = new Huffman();
+    Huffman* hf = new Huffman();
     string TestString = "test string ssss aaaaaa";
-    hf->Compression(TestString);*/
+    hf->Compression(TestString);
+
 
     return 0;
 }

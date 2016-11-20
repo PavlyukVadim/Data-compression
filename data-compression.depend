@@ -1,10 +1,10 @@
 # depslib dependency file v1.0
-1479484296 source:/home/amadev/Рабочий стол/course work/Data-compression/main.cpp
+1479635595 source:/home/amadev/Рабочий стол/course work/Data-compression/main.cpp
 	<iostream>
 	"Archiver.h"
 	"Huffman.h"
 
-1479484135 source:/home/amadev/Рабочий стол/course work/Data-compression/src/Archiver.cpp
+1479484406 source:/home/amadev/Рабочий стол/course work/Data-compression/src/Archiver.cpp
 	"Archiver.h"
 	<stdio.h>
 	<string.h>
