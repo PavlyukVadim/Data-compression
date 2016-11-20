@@ -20,12 +20,11 @@ int main()
     cout << ar->getFilesMetaData();
     ar->Compression();*/
     //ar->Decompression("arc");
-
+    //setlocale(LC_ALL, "Russian");
     Huffman* hf = new Huffman();
-    string TestString = "test string ssss aaaaaa";
+    string TestString = "aaa sdkjfj adsh fasfd sa;dfhudsioidjfhvdufd idaoisufh lasjdvhkjs sidfbdfh dajsb zlkxvj lksjzfzlkjcxlk";
     hf->Compression(TestString);
     hf->Decompression("huffmanCom.bin", "decompress.txt");
-
 
     return 0;
 }

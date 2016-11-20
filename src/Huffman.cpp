@@ -34,16 +34,16 @@ void Huffman::Compression(string data) {
     FILE* f = fopen( (nameFile).c_str(), "wb"); // create new File
     fputs(huffmanTable.c_str(), f); // writte meta
 
-    char bite[1]; bite[0] = 0;
+    char byte[1]; byte[0] = 0;
     int count_ = 0;
     for (int i = 0; i < data.length(); i++) {
         vector<bool> code = codes[data[i]];
         for (int n = 0; n < code.size(); n++) {
-            bite[0] = bite[0] | code[n] << (7 - count_);
+            byte[0] = byte[0] | code[n] << (7 - count_);
             count_++;
             if (count_ == 8) {
-                fwrite(bite, 1, 1, f);
-                bite[0] = 0;
+                fwrite(byte, 1, 1, f);
+                byte[0] = 0;
                 count_ = 0;
             }
         }
@@ -94,6 +94,33 @@ void Huffman::Decompression(string cFileName, string dFileName) {
         codes[symbol] = code;
     }
 
+    //read 1 bite from file and find out in map
+    char byte[1]; int count_ = 0;
+    fread(byte, 1, 1, cf);
+    BinarySymbolCode code;
+
+    while(!feof(cf)) {
+        bool b = byte[0] & (1 << (7 - count_) );
+        if (b) {
+            code.push_back(true);
+        }
+        else {
+            code.push_back(false);
+        }
+
+        for (SymbolCodeMap::const_iterator it = codes.begin(); it != codes.end(); ++it) {
+            if (code == it->second) {
+                cout << it->first;
+                code.clear();
+            }
+        }
+
+        count_++;
+        if (count_ == 8) {
+            count_ = 0;
+            fread(byte, 1, 1, cf);
+        }
+    }
 
 
     fclose(cf);
@@ -101,6 +128,12 @@ void Huffman::Decompression(string cFileName, string dFileName) {
 
     //fputs(huffmanTable.c_str(), f); // writte meta
 }
+
+char Huffman::findCodeInCodesMap(const BinarySymbolCode& code, SymbolCodeMap& codes) {
+
+    return 0;
+}
+
 
 BasicNode* Huffman::BuildTree(int frequencies[]) {
     priority_queue<BasicNode*, vector<BasicNode*>, NodeComp> trees;

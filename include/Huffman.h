@@ -28,6 +28,7 @@ class Huffman
         string GetHuffmanTable(SymbolCodeMap&);
         void Compression(string);
         void Decompression(string, string);
+        char findCodeInCodesMap(const BinarySymbolCode&, SymbolCodeMap&);
 };
 
 class BasicNode {

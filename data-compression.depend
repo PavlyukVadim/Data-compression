@@ -14,10 +14,10 @@
 	<string>
 	<vector>
 
-1479641298 source:/home/amadev/Рабочий стол/course work/Data-compression/src/Huffman.cpp
+1479643159 source:/home/amadev/Рабочий стол/course work/Data-compression/src/Huffman.cpp
 	"Huffman.h"
 
-1479638987 /home/amadev/Рабочий стол/course work/Data-compression/include/Huffman.h
+1479642517 /home/amadev/Рабочий стол/course work/Data-compression/include/Huffman.h
 	<iostream>
 	<queue>
 	<map>
