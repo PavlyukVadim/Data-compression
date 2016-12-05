@@ -3,8 +3,6 @@
 #include "Archiver.h"
 #include "BHuffman.h"
 
-
-
 using namespace std;
 
 
@@ -21,12 +19,13 @@ int main()
     ar->getFilesName();
     cout << ar->getFilesMetaData();
     ar->Compression();*/
+
     //ar->Decompression("arc");
     //setlocale(LC_ALL, "Russian");
-    //Huffman* hf = new Huffman();
+    BHuffman* hf = new BHuffman();
     //string TestString = "idaoisufh lasjdvhkjs sidfbdfh dajsb zlkxvj lksjzfzlkjcxlk";
-    //hf->Compression("RCT.txt");
-    //hf->Decompression("huffmanCom.bin", "decompress.txt");
+    hf->Compression("res.txt");
+    hf->Decompression("huffmanCom.bin", "res4.txt");
 
 
 

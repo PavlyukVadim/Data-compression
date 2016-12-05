@@ -10,11 +10,11 @@ using namespace std;
 
 
 typedef vector<bool> BinarySymbolCode;
-typedef map<char, BinarySymbolCode> SymbolCodeMap;
+typedef map<unsigned char, BinarySymbolCode> SymbolCodeMap;
 
 const int UniqueSymbols = 256; // for char
 class BasicNode;
-const int MAX_META_H = 5; // order
+const int MAX_META_H = 10; // order
 
 
 class BHuffman
@@ -55,7 +55,7 @@ class ParentNode : public BasicNode {
 
 class LeafNode : public BasicNode {
     public:
-        const char c;
+        const unsigned char c;
         LeafNode(int f, char c) : BasicNode(f), c(c) {}
 };
 

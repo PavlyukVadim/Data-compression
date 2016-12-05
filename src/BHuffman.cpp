@@ -8,7 +8,7 @@ BHuffman::~BHuffman() {
 
 }
 
-
+void outputBinarySymbolCode(BinarySymbolCode code);
 
 void BHuffman::Compression(string bFileName) {
 
@@ -16,6 +16,7 @@ void BHuffman::Compression(string bFileName) {
     FILE* bf = fopen( (bFileName).c_str(), "rb"); // open basic file
 
     if(!bf) {
+        cout << "Error opening file!";
         return;
         //
     }
@@ -23,19 +24,32 @@ void BHuffman::Compression(string bFileName) {
     int bFileSize = ftell(bf); // count byte from begin
 
     fseek(bf, 0, SEEK_SET); // begin of file
-    char* data = new char[bFileSize];
+
+    unsigned char* data = new unsigned char[bFileSize];
     int index = 0;
     while(!feof(bf)) {
         if( fread(byte, 1, 1, bf) ) {
-            data[index++] = *byte;
+            data[index] = byte[0];
+            index++;
         }
     }
 
+    cout <<"Initial Length: " << index << endl;
     int frequencies[UniqueSymbols] = {0};
-    const char* ptr = data;
-    while (*ptr != '\0') {
-        ++frequencies[*ptr++];
+    const unsigned char* ptr = data;
+
+    int i = 0;
+    while (i < bFileSize) {
+        frequencies[(int)ptr[i]] += 1;
+        i++;
     }
+
+    i = 0;
+
+    /*for (; i < 256; i++) {
+        cout << i << " " << frequencies[i] << endl;
+    }*/
+
 
     BasicNode* root = BuildTree(frequencies);
     SymbolCodeMap codes;
@@ -44,11 +58,18 @@ void BHuffman::Compression(string bFileName) {
 
 
     string huffmanTable = GetHuffmanTable(codes);
-    cout << huffmanTable << endl;
+    cout << huffmanTable << endl << endl << endl;
     string nameFile = "huffmanCom.bin";
 
     FILE* f = fopen( (nameFile).c_str(), "wb"); // create new File
-    fputs(huffmanTable.c_str(), f); // writte meta
+
+    cout << "Compresed: " << huffmanTable.length() << endl; // 2869
+    const char* hfm_cstr = huffmanTable.c_str();
+    for (int i = 0; i < huffmanTable.length(); i++) {
+        byte[0] = hfm_cstr[i];
+        fwrite(byte, 1, 1, f);
+    }
+    //cout << "Compresed: " << i << endl;
 
     byte[0] = 0;
     int count_ = 0;
@@ -72,83 +93,163 @@ void BHuffman::Decompression(string cFileName, string dFileName) {
     FILE* cf = fopen( (cFileName).c_str(), "rb"); // open compressed file
     FILE* df = fopen( (dFileName).c_str(), "wb"); // create decompress file
 
+    char byte[1];
+
     char strSizeMeta[MAX_META_H];
     fread(strSizeMeta, 1, MAX_META_H, cf);
     int sizeMeta = atoi(strSizeMeta);
 
+    cout <<"Size Meta: " << sizeMeta << endl;
     char *metaData = new char[sizeMeta];
-    fread(metaData, 1, sizeMeta + 1, cf);
-    metaData[sizeMeta] = '\0'; // delete last '|'
-
-    vector<string> tokens; // "symbol symbol_code"
-    char *tok = strtok(metaData, "|");
-    int toks = 0;
-
-    while(tok) {
-        if( !strlen(tok) ) break;
-        tokens.push_back(tok);
-        tok = strtok(NULL, "|");
-        toks++;
+    //const char* hfm_cstr = huffmanTable.c_str();
+    for (int i = 0; i < sizeMeta; i++) {
+        fread(byte, 1, 1, cf);
+        metaData[i] = byte[0];
     }
+
+
+
+
+    cout << "Meta: " << metaData << endl;
+    for (int i = 0; i < sizeMeta; i++) {
+        cout << metaData[i];
+    }
+    cout << endl;
+    cout << "Length : "<< strlen(metaData) << endl;
+
+    vector<unsigned char*> tokens; // "symbol symbol_code"
+
+    int metaEnd = sizeMeta;
+    for (int i = sizeMeta; i >= 0; i--) {
+        if (metaData[i] == '|') {
+            unsigned char *str = new unsigned char[metaEnd - i];
+            for (int j = i + 1; j < metaEnd; j++) {
+                str[j - i - 1] = metaData[j];
+                if (j + 1 == metaEnd) {
+                    str[j - i] = '\0';
+                }
+            }
+            metaEnd = i;
+            //cout << (int) str[0] << " " <<  str << endl;
+            tokens.push_back(str);
+        }
+    }
+
 
     //create SymbolCodeMap ([symbol] = [binary_code])
     SymbolCodeMap codes;
-    for (int i = 0; i < tokens.size(); i++) {
-        //cout << tokens[i] << endl;
-        char symbol = tokens[i][0];
-        BinarySymbolCode code;
-        string strCode = tokens[i].substr(tokens[i].find_last_of(" "), tokens[i].length());
+    cout << tokens.size() << endl;
 
-        for (int n = 0; n < strCode.length(); n++) {
-            if (strCode[n] == '1') {
+    for (int i = 0; i < tokens.size(); i++) {
+        //cout << i << " " <<tokens[i] << endl;
+        unsigned char symbol = tokens[i][0];
+        BinarySymbolCode code;
+        //string strCode = tokens[i].substr(tokens[i].find_last_of(" ") + 1, tokens[i].length());
+        //cout << (int)symbol << " " << strCode << endl;
+        int n = 2;
+        while(tokens[i][n] != '\0') {
+            if (tokens[i][n] == '1') {
                 code.push_back(true);
             }
-            else if (strCode[n] == '0') {
+            else if (tokens[i][n] == '0') {
                 code.push_back(false);
             }
+            n++;
         }
         codes[symbol] = code;
     }
 
+
+
+    //int metaEnd = sizeMeta;
+   /* for (int i = 0; i < sizeMeta; i++) {
+        if (metaData[i] == '|') {
+            unsigned char s = metaData[i + 1];
+            if(i + 1 == sizeMeta) break;
+            int j = i + 1;
+            while(metaData[j] != '|' && j != sizeMeta){
+                j++;
+            }
+            int c_i = 0;
+            for(int o = i + 3; o < j; o++) {
+                bool b = codes[s][c_i++];
+                if (!(b && metaData[o] == '1' || !b && metaData[o] == '0')) {
+                    cout <<"Error: " << (int)s << " " << s << " " << o << " "<< j <<  endl;
+                }
+            }
+            cout << "Check: " << (int)s  << s << endl;
+        }
+    }
+
+    cout << sizeMeta;
+*/
+
+
+    //codes['\n'] = code1;
+
+
+    //cout <<"aaaaaaaaaaaaaaaaaaa";
     //read 1 bite from file and find out in map
-    char byte[1], buffer[1]; int count_ = 0;
-    fread(byte, 1, 1, cf);
+    char buffer[1]; int count_ = 0;
+    byte[0] = fgetc(cf);
+    byte[0] = fgetc(cf);
+    cout <<"Start: "<< byte[0];
+    //byte[0] = fgetc(cf);
+    //fread(byte, 1, 1, cf);
     BinarySymbolCode code;
+    int amount = 0;
+
+    BinarySymbolCode code1;
+    code1.push_back(1);
+    code1.push_back(1);
+    code1.push_back(1);
+    code1.push_back(0);
+    code1.push_back(1);
+    code1.push_back(1);
+    code1.push_back(1);
+    code1.push_back(0);
+
+    codes['|'] = code1;
+
+    //outputBinarySymbolCode(codes['}']);
 
     while(!feof(cf)) {
+        amount++;
         bool b = byte[0] & (1 << (7 - count_) );
+
         if (b) {
-            code.push_back(true);
+            code.push_back(1);
         }
         else {
-            code.push_back(false);
+            code.push_back(0);
         }
-
+        //cout << b;
         for (SymbolCodeMap::const_iterator it = codes.begin(); it != codes.end(); ++it) {
             if (code == it->second) {
-                cout << it->first;
-                buffer[0] = it->first;
-                fwrite(buffer, 1, 1, df);
+                amount++;
+                //cout << it->first;
+                fputc(it->first, df);
+                //fwrite(buffer, 1, 1, df);
+                //outputBinarySymbolCode(code);
                 code.clear();
+                //system("clear");
             }
         }
 
         count_++;
         if (count_ == 8) {
+            //cout << " ";
             count_ = 0;
-            fread(byte, 1, 1, cf);
+            byte[0] = fgetc(cf);
+            //fread(byte, 1, 1, cf);
         }
     }
 
-
     fclose(cf);
     fclose(df);
-
-    //fputs(huffmanTable.c_str(), f); // writte meta
 }
 
 char BHuffman::findCodeInCodesMap(const BinarySymbolCode& code, SymbolCodeMap& codes) {
-
     return 0;
 }
 
@@ -161,6 +262,7 @@ BasicNode* BHuffman::BuildTree(int frequencies[]) {
             trees.push(new LeafNode(frequencies[i], (char)i));
         }
     }
+    //cout << "Size " << trees.size() << endl;
     while (trees.size() > 1) {
         BasicNode* childR = trees.top();
         trees.pop();
@@ -203,6 +305,7 @@ string BHuffman::GetHuffmanTable(SymbolCodeMap& scm) {
             code += it->second[i] ? "1" : "0";
         }
         huffmanTable += code + "|";
+        cout << (int) it->first << " " << it->first << " " << code << endl;
     }
     // add string length meta data on begin
     string strTableSize = to_string( huffmanTable.length() );
@@ -212,4 +315,13 @@ string BHuffman::GetHuffmanTable(SymbolCodeMap& scm) {
     }
 
     return strTableSize + "|" + huffmanTable;
+}
+
+
+void outputBinarySymbolCode(BinarySymbolCode code) {
+    cout << "Code: ";
+    for (int i  = 0; i < code.size(); i++) {
+        cout << code[i];
+    }
+    cout << endl;
 }
