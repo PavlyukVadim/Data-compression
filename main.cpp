@@ -21,12 +21,10 @@ int main()
     ar->Compression();*/
 
     //ar->Decompression("arc");
-    //setlocale(LC_ALL, "Russian");
-    BHuffman* hf = new BHuffman();
-    //string TestString = "idaoisufh lasjdvhkjs sidfbdfh dajsb zlkxvj lksjzfzlkjcxlk";
-    hf->Compression("res.txt");
-    hf->Decompression("huffmanCom.bin", "res4.txt");
 
+    BHuffman* hf = new BHuffman();
+    hf->Compression("data/test.png");
+    hf->Decompression("data/huffmanCom.bin", "data/testd.png");
 
 
     return 0;

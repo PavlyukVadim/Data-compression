@@ -59,7 +59,7 @@ void BHuffman::Compression(string bFileName) {
 
     string huffmanTable = GetHuffmanTable(codes);
     cout << huffmanTable << endl << endl << endl;
-    string nameFile = "huffmanCom.bin";
+    string nameFile = "data/huffmanCom.bin";
 
     FILE* f = fopen( (nameFile).c_str(), "wb"); // create new File
 
@@ -99,7 +99,7 @@ void BHuffman::Decompression(string cFileName, string dFileName) {
     fread(strSizeMeta, 1, MAX_META_H, cf);
     int sizeMeta = atoi(strSizeMeta);
 
-    cout <<"Size Meta: " << sizeMeta << endl;
+    //cout <<"Size Meta: " << sizeMeta << endl;
     char *metaData = new char[sizeMeta];
     //const char* hfm_cstr = huffmanTable.c_str();
     for (int i = 0; i < sizeMeta; i++) {
@@ -108,20 +108,19 @@ void BHuffman::Decompression(string cFileName, string dFileName) {
     }
 
 
-
-
-    cout << "Meta: " << metaData << endl;
+    /*cout << "Meta: " << metaData << endl;
     for (int i = 0; i < sizeMeta; i++) {
         cout << metaData[i];
     }
     cout << endl;
     cout << "Length : "<< strlen(metaData) << endl;
+    */
 
     vector<unsigned char*> tokens; // "symbol symbol_code"
 
     int metaEnd = sizeMeta;
     for (int i = sizeMeta; i >= 0; i--) {
-        if (metaData[i] == '|') {
+        if (metaData[i] == '|' && metaData[i - 1] != '|') {
             unsigned char *str = new unsigned char[metaEnd - i];
             for (int j = i + 1; j < metaEnd; j++) {
                 str[j - i - 1] = metaData[j];
@@ -133,6 +132,20 @@ void BHuffman::Decompression(string cFileName, string dFileName) {
             //cout << (int) str[0] << " " <<  str << endl;
             tokens.push_back(str);
         }
+        else if(metaData[i] == '|' && metaData[i - 1] == '|') {
+            i = i - 1;
+            unsigned char *str = new unsigned char[metaEnd - i];
+            for (int j = i + 1; j < metaEnd; j++) {
+                str[j - i - 1] = metaData[j];
+                if (j + 1 == metaEnd) {
+                    str[j - i] = '\0';
+                }
+            }
+            metaEnd = i;
+            //cout << (int) str[0] << " " <<  str << endl;
+            tokens.push_back(str);
+        }
+
     }
 
 
@@ -141,11 +154,9 @@ void BHuffman::Decompression(string cFileName, string dFileName) {
     cout << tokens.size() << endl;
 
     for (int i = 0; i < tokens.size(); i++) {
-        //cout << i << " " <<tokens[i] << endl;
         unsigned char symbol = tokens[i][0];
         BinarySymbolCode code;
-        //string strCode = tokens[i].substr(tokens[i].find_last_of(" ") + 1, tokens[i].length());
-        //cout << (int)symbol << " " << strCode << endl;
+
         int n = 2;
         while(tokens[i][n] != '\0') {
             if (tokens[i][n] == '1') {
@@ -159,9 +170,7 @@ void BHuffman::Decompression(string cFileName, string dFileName) {
         codes[symbol] = code;
     }
 
-
-
-    //int metaEnd = sizeMeta;
+    // Checking truth
    /* for (int i = 0; i < sizeMeta; i++) {
         if (metaData[i] == '|') {
             unsigned char s = metaData[i + 1];
@@ -181,37 +190,17 @@ void BHuffman::Decompression(string cFileName, string dFileName) {
         }
     }
 
-    cout << sizeMeta;
-*/
+    cout << sizeMeta; */
 
 
-    //codes['\n'] = code1;
-
-
-    //cout <<"aaaaaaaaaaaaaaaaaaa";
     //read 1 bite from file and find out in map
     char buffer[1]; int count_ = 0;
     byte[0] = fgetc(cf);
     byte[0] = fgetc(cf);
     cout <<"Start: "<< byte[0];
-    //byte[0] = fgetc(cf);
-    //fread(byte, 1, 1, cf);
+
     BinarySymbolCode code;
     int amount = 0;
-
-    BinarySymbolCode code1;
-    code1.push_back(1);
-    code1.push_back(1);
-    code1.push_back(1);
-    code1.push_back(0);
-    code1.push_back(1);
-    code1.push_back(1);
-    code1.push_back(1);
-    code1.push_back(0);
-
-    codes['|'] = code1;
-
-    //outputBinarySymbolCode(codes['}']);
 
     while(!feof(cf)) {
         amount++;
@@ -227,21 +216,15 @@ void BHuffman::Decompression(string cFileName, string dFileName) {
         for (SymbolCodeMap::const_iterator it = codes.begin(); it != codes.end(); ++it) {
             if (code == it->second) {
                 amount++;
-                //cout << it->first;
                 fputc(it->first, df);
-                //fwrite(buffer, 1, 1, df);
-                //outputBinarySymbolCode(code);
                 code.clear();
-                //system("clear");
             }
         }
 
         count_++;
         if (count_ == 8) {
-            //cout << " ";
             count_ = 0;
             byte[0] = fgetc(cf);
-            //fread(byte, 1, 1, cf);
         }
     }
 
