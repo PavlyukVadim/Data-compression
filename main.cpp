@@ -23,8 +23,8 @@ int main()
     //ar->Decompression("arc");
 
     BHuffman* hf = new BHuffman();
-    hf->Compression("data/rtx.txt");
-    hf->Decompression("data/huffmanCom.bin", "data/rtxdec.txt");
+    hf->Compression("data/video.mp4");
+    hf->Decompression("data/huffmanCom.bin", "data/videodec.mp4");
 
     return 0;
 }

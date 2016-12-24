@@ -11,6 +11,7 @@ using namespace std;
 
 typedef vector<bool> BinarySymbolCode;
 typedef map<unsigned char, BinarySymbolCode> SymbolCodeMap;
+typedef map<BinarySymbolCode, unsigned char> CodeSymbolMap;
 
 const int UniqueSymbols = 256; // for char
 class BasicNode;

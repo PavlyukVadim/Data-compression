@@ -163,6 +163,9 @@ void BHuffman::Decompression(string cFileName, string dFileName) {
 
     //create SymbolCodeMap ([symbol] = [binary_code])
     SymbolCodeMap codes;
+
+    CodeSymbolMap codeSymbol;
+
     cout << tokens.size() << endl;
 
     for (int i = 0; i < tokens.size(); i++) {
@@ -180,6 +183,7 @@ void BHuffman::Decompression(string cFileName, string dFileName) {
             n++;
         }
         codes[symbol] = code;
+        codeSymbol[code] = symbol;
     }
 
     // Checking truth
@@ -224,7 +228,7 @@ void BHuffman::Decompression(string cFileName, string dFileName) {
             code.push_back(0);
         }
         //cout << b;
-        for (SymbolCodeMap::const_iterator it = codes.begin(); it != codes.end(); ++it) {
+        /*for (SymbolCodeMap::const_iterator it = codes.begin(); it != codes.end(); ++it) {
             if (code == it->second) {
                 fputc(it->first, df);
                 code.clear();
@@ -235,7 +239,34 @@ void BHuffman::Decompression(string cFileName, string dFileName) {
                     return;
                 }
             }
+        }*/
+
+        /*for (CodeSymbolMap::const_iterator it = codeSymbol.begin(); it != codeSymbol.end(); ++it) {
+            if (code == it->first) {
+                fputc(it->second, df);
+                code.clear();
+                if (numberOfBR == cFileSize) {
+                    // Close files & end work
+                    fclose(cf);
+                    fclose(df);
+                    return;
+                }
+            }
+        }*/
+
+        CodeSymbolMap::const_iterator it;
+        it = codeSymbol.find(code);
+        if (it != codeSymbol.end()){
+            fputc(it->second, df);
+            code.clear();
+            if (numberOfBR == cFileSize) {
+                // Close files & end work
+                fclose(cf);
+                fclose(df);
+                return;
+            }
         }
+
 
         count_++;
         if (count_ == 8) {
