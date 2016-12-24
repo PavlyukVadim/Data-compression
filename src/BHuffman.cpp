@@ -85,6 +85,9 @@ void BHuffman::Compression(string bFileName) {
             }
         }
     }
+
+    fwrite(byte, 1, 1, f);
+
     fclose(f);
 
 }
@@ -93,10 +96,19 @@ void BHuffman::Decompression(string cFileName, string dFileName) {
     FILE* cf = fopen( (cFileName).c_str(), "rb"); // open compressed file
     FILE* df = fopen( (dFileName).c_str(), "wb"); // create decompress file
 
+    fseek(cf, 0, SEEK_END);
+    int cFileSize = ftell(cf); // count byte from begin
+
+    fseek(cf, 0, SEEK_SET); // begin of file
+
+    cout << "Size of compressed file: " << cFileSize << endl;
+    int numberOfBR = 0; // number of bytes read
+
     char byte[1];
 
     char strSizeMeta[MAX_META_H];
     fread(strSizeMeta, 1, MAX_META_H, cf);
+    numberOfBR += MAX_META_H;
     int sizeMeta = atoi(strSizeMeta);
 
     //cout <<"Size Meta: " << sizeMeta << endl;
@@ -106,7 +118,7 @@ void BHuffman::Decompression(string cFileName, string dFileName) {
         fread(byte, 1, 1, cf);
         metaData[i] = byte[0];
     }
-
+    numberOfBR += sizeMeta;
 
     /*cout << "Meta: " << metaData << endl;
     for (int i = 0; i < sizeMeta; i++) {
@@ -142,7 +154,7 @@ void BHuffman::Decompression(string cFileName, string dFileName) {
                 }
             }
             metaEnd = i;
-            //cout << (int) str[0] << " " <<  str << endl;
+            cout << (int) str[0] << " " <<  str << endl;
             tokens.push_back(str);
         }
 
@@ -197,13 +209,47 @@ void BHuffman::Decompression(string cFileName, string dFileName) {
     char buffer[1]; int count_ = 0;
     byte[0] = fgetc(cf);
     byte[0] = fgetc(cf);
-    cout <<"Start: "<< byte[0];
+    numberOfBR += 2;
 
     BinarySymbolCode code;
-    int amount = 0;
 
     while(!feof(cf)) {
-        amount++;
+
+        bool b = byte[0] & (1 << (7 - count_) );
+
+        if (b) {
+            code.push_back(1);
+        }
+        else {
+            code.push_back(0);
+        }
+        //cout << b;
+        for (SymbolCodeMap::const_iterator it = codes.begin(); it != codes.end(); ++it) {
+            if (code == it->second) {
+                fputc(it->first, df);
+                code.clear();
+                if (numberOfBR == cFileSize) {
+                    // Close files & end work
+                    fclose(cf);
+                    fclose(df);
+                    return;
+                }
+            }
+        }
+
+        count_++;
+        if (count_ == 8) {
+            count_ = 0;
+            byte[0] = fgetc(cf);
+            numberOfBR++;
+        }
+    }
+
+    //fputc('\n', df);
+    //fputc('\0', df);
+
+    /*while(count_ < 8) {
+
         bool b = byte[0] & (1 << (7 - count_) );
 
         if (b) {
@@ -218,18 +264,18 @@ void BHuffman::Decompression(string cFileName, string dFileName) {
                 amount++;
                 fputc(it->first, df);
                 code.clear();
+                break;
             }
         }
 
         count_++;
-        if (count_ == 8) {
-            count_ = 0;
-            byte[0] = fgetc(cf);
-        }
-    }
+    }*/
 
-    fclose(cf);
-    fclose(df);
+
+
+    //cout << endl << code.size() << endl << count_ << endl  << numberOfBR;
+    //fclose(cf);
+    //fclose(df);
 }
 
 char BHuffman::findCodeInCodesMap(const BinarySymbolCode& code, SymbolCodeMap& codes) {

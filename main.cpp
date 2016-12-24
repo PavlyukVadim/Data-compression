@@ -23,9 +23,8 @@ int main()
     //ar->Decompression("arc");
 
     BHuffman* hf = new BHuffman();
-    hf->Compression("data/test.png");
-    hf->Decompression("data/huffmanCom.bin", "data/testd.png");
-
+    hf->Compression("data/rtx.txt");
+    hf->Decompression("data/huffmanCom.bin", "data/rtxdec.txt");
 
     return 0;
 }
