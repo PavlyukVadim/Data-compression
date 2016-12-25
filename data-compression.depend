@@ -1,15 +1,14 @@
 # depslib dependency file v1.0
-1482658121 source:/home/amadev/Рабочий стол/course work/Data-compression/main.cpp
+1482674061 source:/home/amadev/Рабочий стол/course work/Data-compression/main.cpp
 	<iostream>
-	"Archiver.h"
-	"BHuffman.h"
+	"SParch.h"
 
-1482658070 source:/home/amadev/Рабочий стол/course work/Data-compression/src/Archiver.cpp
+1482673199 source:/home/amadev/Рабочий стол/course work/Data-compression/src/Archiver.cpp
 	"Archiver.h"
 	<stdio.h>
 	<string.h>
 
-1482627678 /home/amadev/Рабочий стол/course work/Data-compression/include/Archiver.h
+1482661119 /home/amadev/Рабочий стол/course work/Data-compression/include/Archiver.h
 	<iostream>
 	<string>
 	<vector>
@@ -25,14 +24,23 @@
 	<algorithm>
 	<string.h>
 
-1482590528 source:/home/amadev/Рабочий стол/course work/Data-compression/src/BHuffman.cpp
+1482660039 source:/home/amadev/Рабочий стол/course work/Data-compression/src/BHuffman.cpp
 	"BHuffman.h"
 
-1482589785 /home/amadev/Рабочий стол/course work/Data-compression/include/BHuffman.h
+1482659913 /home/amadev/Рабочий стол/course work/Data-compression/include/BHuffman.h
 	<iostream>
 	<queue>
 	<map>
 	<iterator>
 	<algorithm>
 	<string.h>
+
+1482673203 source:/home/amadev/Рабочий стол/course work/Data-compression/SParch.cpp
+	"SParch.h"
+	<vector>
+	<iostream>
+
+1482660839 /home/amadev/Рабочий стол/course work/Data-compression/SParch.h
+	"Archiver.h"
+	"BHuffman.h"
 

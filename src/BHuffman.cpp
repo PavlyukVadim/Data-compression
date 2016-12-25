@@ -10,14 +10,14 @@ BHuffman::~BHuffman() {
 
 void outputBinarySymbolCode(BinarySymbolCode code);
 
-void BHuffman::Compression(string bFileName) {
+string BHuffman::Compression(string bFileName) {
 
     char byte[1];
     FILE* bf = fopen( (bFileName).c_str(), "rb"); // open basic file
 
     if(!bf) {
         cout << "Error opening file!";
-        return;
+        return "";
         //
     }
     fseek(bf, 0, SEEK_END);
@@ -59,7 +59,9 @@ void BHuffman::Compression(string bFileName) {
 
     string huffmanTable = GetHuffmanTable(codes);
     cout << huffmanTable << endl << endl << endl;
-    string nameFile = "data/huffmanCom.bin";
+
+    int l_pos = bFileName.rfind("/");
+    string nameFile = bFileName.substr(l_pos + 1, bFileName.length()) + ".huff";
 
     FILE* f = fopen( (nameFile).c_str(), "wb"); // create new File
 
@@ -89,7 +91,7 @@ void BHuffman::Compression(string bFileName) {
     fwrite(byte, 1, 1, f);
 
     fclose(f);
-
+    return nameFile;
 }
 
 void BHuffman::Decompression(string cFileName, string dFileName) {

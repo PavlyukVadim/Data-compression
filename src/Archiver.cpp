@@ -65,18 +65,24 @@ string Archiver::getFilesMetaData(vector<string> const& filesPath) {
 }
 
 
-void Archiver::Decompression(string nameArcFile, string pathFile) {
+vector<string> Archiver::Decompression(string nameArcFile, string pathFile) {
+    vector<string> cFiles;
+
     FILE *arch = fopen(nameArcFile.c_str(),"rb"); // open Arch File
     char strSizeMeta[MAX_META];
     fread(strSizeMeta, 1, MAX_META, arch);
     int sizeMeta = atoi(strSizeMeta);
     cout << "sizeMeta: " << sizeMeta << endl;
 
-    char *metaData = new char[sizeMeta];
-    fread(metaData, 1, sizeMeta, arch);
-    cout << "MetaData: " << metaData << endl;
+    char*metaData = new  char[sizeMeta];
+    fread(metaData, 1, sizeMeta + 1, arch);
+    /*for (int i = 0; i < sizeMeta; i++) {
+        cout << metaData[i] << endl;
+    }*/
+    metaData[sizeMeta] = '\0';
+    cout << "MetaData: " << metaData << endl << endl;
 
-    fread(metaData, 1, 1, arch);
+    //fread(metaData, 1, 1, arch);
     vector<string> tokens; // "file_name file_size"
     char *tok = strtok(metaData, "|");
     int toks = 0;
@@ -95,8 +101,8 @@ void Archiver::Decompression(string nameArcFile, string pathFile) {
         int sizeFile = atoi( tokens[i].substr(0, tokens[i].find(" ")).c_str() );
 
         cout << pathFile << fileName << endl;
-        FILE* f = fopen((pathFile + fileName + "2").c_str(), "wb");
-
+        FILE* f = fopen((pathFile + fileName).c_str(), "wb");
+        cFiles.push_back(pathFile + fileName);
         while(sizeFile--) {
             if( fread(byte, 1, 1, arch) ) {
                 fwrite(byte, 1, 1, f);
@@ -104,6 +110,7 @@ void Archiver::Decompression(string nameArcFile, string pathFile) {
         }
         fclose(f);
     }
+    return cFiles;
 }
 
 

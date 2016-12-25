@@ -17,7 +17,7 @@ class Archiver
 
     string getFilesMetaData(vector<string> const& filesName);
     void Compression(vector<string> const& filesName, string archName);
-    void Decompression(string, string);
+    vector<string> Decompression(string, string);
 
     void getFilesName();
     string validateMeta(string);
