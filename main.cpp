@@ -8,23 +8,20 @@ using namespace std;
 
 int main()
 {
-    //vector<string> files(3);
+    vector<string> files(2);
 
-    /*files[0] = "aaa.txt";
-    files[1] = "bbb.txt";
-    files[2] = "logo.png";
+    files[0] = "data/lol.jpg";
+    files[1] = "data/test.bmp";
 
 
-    Archiver *ar = new Archiver(files);
-    ar->getFilesName();
-    cout << ar->getFilesMetaData();
-    ar->Compression();*/
+    Archiver *ar = new Archiver();
+    //ar->getFilesName();
+    ar->Compression(files, "arc1");
+    ar->Decompression("arc1", "data/");
 
-    //ar->Decompression("arc");
-
-    BHuffman* hf = new BHuffman();
+    /*BHuffman* hf = new BHuffman();
     hf->Compression("data/video.mp4");
-    hf->Decompression("data/huffmanCom.bin", "data/videodec.mp4");
+    hf->Decompression("data/huffmanCom.bin", "data/videodec.mp4");*/
 
     return 0;
 }
